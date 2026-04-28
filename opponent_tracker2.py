@@ -13,9 +13,6 @@ from collections import deque
 import time
 import NashNet
 
-# speedMerger = 0.2
-# speedLane = -0.1
-
 class GameTheoryRacingNode(Node):
     def __init__(self):
 
@@ -133,7 +130,7 @@ class GameTheoryRacingNode(Node):
 
     def game_loop(self):
         if len(self.history_tb3_1) == 0:
-            return  ## not enough data yet twin
+            return  ## not enough data yet
         self.angle_rate = self.angle_tb3_1 - self.prev_angle_tb3_1
         speedLane, speedMerger = NashNet.get_speeds(self.dist_tb3_1)
         self.prev_angle_tb3_1 = self.angle_tb3_1
@@ -170,17 +167,13 @@ class GameTheoryRacingNode(Node):
                     self.merged = True
 
             if not self.merged:
-                # ====================================================
                 # APPROACH: Drive straight into the lane
                 # tb3 starts behind/beside us at ~45deg, just go forward
-                # ====================================================
                 sample_speed = speedMerger
                 sample_steering = 0.0
             elif abs(self.angle_tb3_1) > (math.pi / 2):
-                # ====================================================
                 # IN LANE - FOLLOW MODE (tb3 is behind us)
                 # Use tb3's angle to stay aligned with the lane
-                # ====================================================
                 if self.angle_tb3_1 > 0:
                     angle_to_back = self.angle_tb3_1 - math.pi
                 else:
@@ -188,9 +181,7 @@ class GameTheoryRacingNode(Node):
                 sample_speed = speedMerger
                 sample_steering = -((angle_to_back * 0.8) + (self.angle_rate * 0.5))
             else:
-                # ====================================================
                 # PACE CAR MODE (tb3 caught up and is now in front)
-                # ====================================================
                 sample_steering = (self.angle_tb3_1 * 0.8)
                 if self.dist_tb3_1 < 0.5:
                     sample_speed = speedMerger
