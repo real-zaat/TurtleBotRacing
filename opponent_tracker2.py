@@ -116,7 +116,7 @@ class GameTheoryRacingNode(Node):
 
         angle_rad = msg.angle_min + (closest_index * msg.angle_increment)
 
-        ### Normalize the ts angle to be between -pi and pi
+        ### Normalize the angle to be between -pi and pi
         if angle_rad > math.pi:
             angle_rad -= 2 * math.pi
 
@@ -181,7 +181,6 @@ class GameTheoryRacingNode(Node):
                 sample_speed = speedMerger
                 sample_steering = -((angle_to_back * 0.8) + (self.angle_rate * 0.5))
             else:
-                # PACE CAR MODE (tb3 caught up and is now in front)
                 sample_steering = (self.angle_tb3_1 * 0.8)
                 if self.dist_tb3_1 < 0.5:
                     sample_speed = speedMerger
